@@ -1,22 +1,25 @@
 package com.nttdatabc.msmonedero.service.strategy.validation_wallet;
 
+import static com.nttdatabc.msmonedero.utils.Constantes.*;
+
 import com.google.gson.Gson;
 import com.nttdatabc.msmonedero.config.KafkaConsumerListener;
 import com.nttdatabc.msmonedero.model.Wallet;
 import com.nttdatabc.msmonedero.model.enums.TypeDocumentIdentification;
 import com.nttdatabc.msmonedero.repository.WalletRepository;
 import com.nttdatabc.msmonedero.utils.exceptions.errors.ErrorResponseException;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.KafkaTemplate;
 import reactor.core.publisher.Mono;
 
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
 
-import static com.nttdatabc.msmonedero.utils.Constantes.*;
-
-public class ValidateDebitCard extends ValidateWhenDebitCard{
+/**
+ * Estrategia para validar cuando es con debitcard.
+ */
+public class ValidateDebitCard extends ValidateWhenDebitCard {
   @Override
   public Mono<Void> validateWalletNoNulls(Wallet wallet) {
     return Mono.just(wallet)
@@ -64,10 +67,10 @@ public class ValidateDebitCard extends ValidateWhenDebitCard{
     return walletRepository.findByNumberPhone(wallet.getNumberPhone())
         .hasElement()
         .flatMap(aBoolean -> {
-          if(aBoolean){
+          if (aBoolean) {
             return Mono.error(new ErrorResponseException(EX_ERROR_PHONE_NUMBER_DUPLICATE,
                 HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT));
-          }else{
+          } else {
             return Mono.empty();
           }
         });
@@ -84,14 +87,13 @@ public class ValidateDebitCard extends ValidateWhenDebitCard{
     return kafkaConsumerListener.getDebCardVerificationResponseSink()
         .delayElement(Duration.ofSeconds(1))
         .flatMap(s -> {
-          if(s.contains("error")){
+          if (s.contains("error")) {
             return Mono.error(new ErrorResponseException(EX_NOT_FOUND_RECURSO_CARD_DEB,
                 HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND));
-          }else{
+          } else {
             return Mono.empty();
           }
         });
-
 
 
   }

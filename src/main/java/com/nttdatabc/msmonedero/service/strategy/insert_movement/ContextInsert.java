@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import reactor.core.publisher.Mono;
 
+/**
+ * Context de la estrategia.
+ */
 public class ContextInsert {
   private IStrategyInsertMovement iStrategyInsertMovement;
 
@@ -16,11 +19,11 @@ public class ContextInsert {
     this.iStrategyInsertMovement = iStrategyInsertMovement;
   }
 
-  public Mono<Void>executeInsert(Wallet wallet, MovementWallet movementWallet,
-                                 MovementWalletRepository movementWalletRepository,
-                                 WalletRepository walletRepository, KafkaTemplate<String, String> kafkaTemplate,
-                                 KafkaConsumerListener kafkaConsumerListener){
-    return iStrategyInsertMovement.insert(wallet,movementWallet,
-        movementWalletRepository,walletRepository, kafkaTemplate, kafkaConsumerListener);
+  public Mono<Void> executeInsert(Wallet wallet, MovementWallet movementWallet,
+                                  MovementWalletRepository movementWalletRepository,
+                                  WalletRepository walletRepository, KafkaTemplate<String, String> kafkaTemplate,
+                                  KafkaConsumerListener kafkaConsumerListener) {
+    return iStrategyInsertMovement.insert(wallet, movementWallet,
+        movementWalletRepository, walletRepository, kafkaTemplate, kafkaConsumerListener);
   }
 }

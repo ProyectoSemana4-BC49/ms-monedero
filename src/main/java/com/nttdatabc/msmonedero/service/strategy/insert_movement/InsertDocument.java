@@ -1,31 +1,32 @@
 package com.nttdatabc.msmonedero.service.strategy.insert_movement;
 
+import static com.nttdatabc.msmonedero.utils.Constantes.EX_ERROR_BALANCE_INSUFICIENT;
+import static com.nttdatabc.msmonedero.utils.Utilitarios.generateUuid;
+
 import com.google.gson.Gson;
 import com.nttdatabc.msmonedero.model.MovementWallet;
 import com.nttdatabc.msmonedero.model.Wallet;
 import com.nttdatabc.msmonedero.repository.MovementWalletRepository;
 import com.nttdatabc.msmonedero.repository.WalletRepository;
-import com.nttdatabc.msmonedero.utils.Utilitarios;
 import com.nttdatabc.msmonedero.utils.exceptions.errors.ErrorResponseException;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.KafkaTemplate;
 import reactor.core.publisher.Mono;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Map;
-
-import static com.nttdatabc.msmonedero.utils.Constantes.EX_ERROR_BALANCE_INSUFICIENT;
-import static com.nttdatabc.msmonedero.utils.Utilitarios.generateUuid;
-
-public class InsertDocument extends InsertWhenDocument{
+/**
+ * Estrategia para insertar wallet solo con dni.
+ */
+public class InsertDocument extends InsertWhenDocument {
   @Override
   Mono<Void> verifyBalanceSuficien(Wallet wallet, MovementWallet movementWallet) {
     return Mono.just(wallet)
         .flatMap(walletFlujo -> {
-          if(walletFlujo.getBalanceTotal().doubleValue() < movementWallet.getMount().doubleValue()){
+          if (walletFlujo.getBalanceTotal().doubleValue() < movementWallet.getMount().doubleValue()) {
             return Mono.error(new ErrorResponseException(EX_ERROR_BALANCE_INSUFICIENT, HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT));
-          }else{
+          } else {
             return Mono.empty();
           }
         });
@@ -54,12 +55,12 @@ public class InsertDocument extends InsertWhenDocument{
     return Mono.just(wallet)
         .then(walletRepository.findByNumberPhone(movementWallet.getDestinationFor()))
         .flatMap(walletFlujo -> {
-          if(walletFlujo.getCardDebitAssociate() == null){
+          if (walletFlujo.getCardDebitAssociate() == null) {
             walletFlujo.setBalanceTotal(walletFlujo.getBalanceTotal().add(movementWallet.getMount()));
             return walletRepository.save(walletFlujo);
-          }else{
+          } else {
             Map<String, String> requestUpdateMoney = new HashMap<>();
-            requestUpdateMoney.put("cardDebitId",walletFlujo.getCardDebitAssociate());
+            requestUpdateMoney.put("cardDebitId", walletFlujo.getCardDebitAssociate());
             requestUpdateMoney.put("mount", movementWallet.getMount().toString());
             requestUpdateMoney.put("type", "increase");
             Gson gson = new Gson();

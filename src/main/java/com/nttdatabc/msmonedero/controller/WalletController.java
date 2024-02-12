@@ -1,5 +1,7 @@
 package com.nttdatabc.msmonedero.controller;
 
+import static com.nttdatabc.msmonedero.utils.Constantes.PREFIX_PATH;
+
 import com.nttdatabc.msmonedero.controller.interfaces.WalletControllerApi;
 import com.nttdatabc.msmonedero.model.Wallet;
 import com.nttdatabc.msmonedero.service.WalletServiceImpl;
@@ -13,14 +15,16 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import static com.nttdatabc.msmonedero.utils.Constantes.PREFIX_PATH;
-
+/**
+ * Controller Wallet.
+ */
 @RestController
 @Slf4j
 @RequestMapping(PREFIX_PATH)
 public class WalletController implements WalletControllerApi {
   @Autowired
   private WalletServiceImpl walletService;
+
   @Override
   public ResponseEntity<Mono<Void>> createWallet(Wallet wallet, ServerWebExchange exchange) {
     return new ResponseEntity<>(walletService.createWalletService(wallet)

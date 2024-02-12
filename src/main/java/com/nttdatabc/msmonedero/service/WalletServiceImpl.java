@@ -1,5 +1,9 @@
 package com.nttdatabc.msmonedero.service;
 
+
+import static com.nttdatabc.msmonedero.utils.Constantes.EX_NOT_FOUND_RECURSO;
+import static com.nttdatabc.msmonedero.utils.Constantes.VALUE_INIT_CREATE_WALLET;
+
 import com.nttdatabc.msmonedero.config.KafkaConsumerListener;
 import com.nttdatabc.msmonedero.model.Wallet;
 import com.nttdatabc.msmonedero.repository.WalletRepository;
@@ -9,6 +13,9 @@ import com.nttdatabc.msmonedero.service.strategy.validation_wallet.ValidateDebit
 import com.nttdatabc.msmonedero.service.strategy.validation_wallet.ValidateDocument;
 import com.nttdatabc.msmonedero.utils.Utilitarios;
 import com.nttdatabc.msmonedero.utils.exceptions.errors.ErrorResponseException;
+import java.math.BigDecimal;
+import java.time.Duration;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
@@ -18,13 +25,10 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.math.BigDecimal;
-import java.time.Duration;
-import java.util.Objects;
 
-import static com.nttdatabc.msmonedero.utils.Constantes.EX_NOT_FOUND_RECURSO;
-import static com.nttdatabc.msmonedero.utils.Constantes.VALUE_INIT_CREATE_WALLET;
-
+/**
+ * Service de wallet.
+ */
 @Service
 public class WalletServiceImpl implements WalletService {
 
@@ -41,9 +45,9 @@ public class WalletServiceImpl implements WalletService {
   @Override
   public Mono<Void> createWalletService(Wallet wallet) {
     ContextValidation ctxValidation = null;
-    if(!Objects.isNull(wallet.getCardDebitAssociate())){
+    if (!Objects.isNull(wallet.getCardDebitAssociate())) {
       ctxValidation = new ContextValidation(new ValidateDebitCard());
-    }else{
+    } else {
       ctxValidation = new ContextValidation(new ValidateDocument());
     }
     return ctxValidation.executeValidation(wallet, walletRepository, kafkaTemplate, kafkaConsumerListener)
@@ -79,6 +83,6 @@ public class WalletServiceImpl implements WalletService {
   public Mono<Wallet> getWalletByIdService(String walletId) {
     return walletRepository.findById(walletId)
         .switchIfEmpty(Mono.error(new ErrorResponseException(EX_NOT_FOUND_RECURSO,
-            HttpStatus.NOT_FOUND.value(),HttpStatus.NOT_FOUND)));
+            HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND)));
   }
 }

@@ -6,7 +6,7 @@ import com.nttdatabc.msmonedero.repository.WalletRepository;
 import org.springframework.kafka.core.KafkaTemplate;
 import reactor.core.publisher.Mono;
 
-abstract public class ValidateWhenDocument implements IStrategyValidateWallet{
+public abstract class ValidateWhenDocument implements IStrategyValidateWallet{
   @Override
   public Mono<Void> validate(Wallet wallet, WalletRepository walletRepository, KafkaTemplate<String, String> kafkaTemplate, KafkaConsumerListener kafkaConsumerListener) {
     return validateWalletNoNulls(wallet)

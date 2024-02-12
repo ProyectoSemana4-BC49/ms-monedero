@@ -1,5 +1,7 @@
 package com.nttdatabc.msmonedero.service.strategy.validation_wallet;
 
+import static com.nttdatabc.msmonedero.utils.Constantes.*;
+
 import com.nttdatabc.msmonedero.model.Wallet;
 import com.nttdatabc.msmonedero.model.enums.TypeDocumentIdentification;
 import com.nttdatabc.msmonedero.repository.WalletRepository;
@@ -7,9 +9,11 @@ import com.nttdatabc.msmonedero.utils.exceptions.errors.ErrorResponseException;
 import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 
-import static com.nttdatabc.msmonedero.utils.Constantes.*;
 
-public class ValidateDocument extends ValidateWhenDocument{
+/**
+ * Estrategia para validar cuando es con dni.
+ */
+public class ValidateDocument extends ValidateWhenDocument {
 
 
   @Override
@@ -57,10 +61,10 @@ public class ValidateDocument extends ValidateWhenDocument{
     return walletRepository.findByNumberPhone(wallet.getNumberPhone())
         .hasElement()
         .flatMap(aBoolean -> {
-          if(aBoolean){
+          if (aBoolean) {
             return Mono.error(new ErrorResponseException(EX_ERROR_PHONE_NUMBER_DUPLICATE,
                 HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT));
-          }else{
+          } else {
             return Mono.empty();
           }
         });

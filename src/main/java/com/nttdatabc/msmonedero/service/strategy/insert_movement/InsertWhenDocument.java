@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import reactor.core.publisher.Mono;
 
-abstract public class InsertWhenDocument implements IStrategyInsertMovement{
+public abstract class InsertWhenDocument implements IStrategyInsertMovement{
   @Override
   public Mono<Void> insert(Wallet wallet, MovementWallet movementWallet,
                            MovementWalletRepository movementWalletRepository,

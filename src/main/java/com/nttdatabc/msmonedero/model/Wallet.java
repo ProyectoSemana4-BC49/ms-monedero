@@ -1,22 +1,13 @@
 package com.nttdatabc.msmonedero.model;
 
-import java.net.URI;
-import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.math.BigDecimal;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-
-
-import java.util.*;
+import java.math.BigDecimal;
+import java.util.Objects;
 import javax.annotation.Generated;
+import javax.validation.Valid;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * Wallet
@@ -48,8 +39,9 @@ public class Wallet {
   }
 
   /**
-   * Get id
-   * @return id
+   * Get id.
+   *
+   * @return id.
    */
 
   @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -68,8 +60,9 @@ public class Wallet {
   }
 
   /**
-   * Get typeDocumentIdentification
-   * @return typeDocumentIdentification
+   * Get typeDocumentIdentification.
+   *
+   * @return typeDocumentIdentification.
    */
 
   @Schema(name = "typeDocumentIdentification", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -89,6 +82,7 @@ public class Wallet {
 
   /**
    * Get numberIdentification
+   *
    * @return numberIdentification
    */
 
@@ -109,6 +103,7 @@ public class Wallet {
 
   /**
    * Get numberPhone
+   *
    * @return numberPhone
    */
 
@@ -129,6 +124,7 @@ public class Wallet {
 
   /**
    * Get imeiPhone
+   *
    * @return imeiPhone
    */
 
@@ -149,6 +145,7 @@ public class Wallet {
 
   /**
    * Get email
+   *
    * @return email
    */
 
@@ -169,6 +166,7 @@ public class Wallet {
 
   /**
    * Get cardDebitAssociate
+   *
    * @return cardDebitAssociate
    */
 
@@ -189,6 +187,7 @@ public class Wallet {
 
   /**
    * Get balanceTotal
+   *
    * @return balanceTotal
    */
   @Valid

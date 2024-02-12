@@ -1,5 +1,8 @@
 package com.nttdatabc.msmonedero.service.strategy.insert_movement;
 
+import static com.nttdatabc.msmonedero.utils.Constantes.EX_ERROR_BALANCE_INSUFICIENT;
+import static com.nttdatabc.msmonedero.utils.Utilitarios.generateUuid;
+
 import com.google.gson.Gson;
 import com.nttdatabc.msmonedero.config.KafkaConsumerListener;
 import com.nttdatabc.msmonedero.model.MovementWallet;
@@ -7,22 +10,21 @@ import com.nttdatabc.msmonedero.model.Wallet;
 import com.nttdatabc.msmonedero.repository.MovementWalletRepository;
 import com.nttdatabc.msmonedero.repository.WalletRepository;
 import com.nttdatabc.msmonedero.utils.exceptions.errors.ErrorResponseException;
-import org.json.HTTP;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.KafkaTemplate;
 import reactor.core.publisher.Mono;
 
-import java.util.HashMap;
-import java.util.Map;
+/**
+ * Estrategia implementada cuando lo asocia a trarjeta de debito.
+ */
 
-import static com.nttdatabc.msmonedero.utils.Constantes.EX_ERROR_BALANCE_INSUFICIENT;
-import static com.nttdatabc.msmonedero.utils.Utilitarios.generateUuid;
-
-public class InsertDebitCard extends InsertWhenDebitCard{
+public class InsertDebitCard extends InsertWhenDebitCard {
   @Override
   Mono<Void> verifyBalanceSuficient(Wallet wallet, MovementWallet movementWallet, KafkaTemplate<String, String> kafkaTemplate, KafkaConsumerListener kafkaConsumerListener) {
     Map<String, String> requestVerifyBalance = new HashMap<>();
-    requestVerifyBalance.put("cardDebitId",wallet.getCardDebitAssociate());
+    requestVerifyBalance.put("cardDebitId", wallet.getCardDebitAssociate());
     requestVerifyBalance.put("mount", movementWallet.getMount().toString());
     Gson gson = new Gson();
     String requestStr = gson.toJson(requestVerifyBalance);
@@ -30,11 +32,11 @@ public class InsertDebitCard extends InsertWhenDebitCard{
 
     return kafkaConsumerListener.getDebCardVerificationBalanceResponseSink()
         .flatMap(s -> {
-          if(s.contains("error")){
+          if (s.contains("error")) {
             return Mono.error(new ErrorResponseException(EX_ERROR_BALANCE_INSUFICIENT,
                 HttpStatus.CONFLICT.value(), HttpStatus.CONFLICT));
-          }else{
-           return Mono.empty();
+          } else {
+            return Mono.empty();
           }
         });
   }
@@ -51,7 +53,7 @@ public class InsertDebitCard extends InsertWhenDebitCard{
     return Mono.just(wallet)
         .flatMap(walletFlujo -> {
           Map<String, String> requestUpdateMoney = new HashMap<>();
-          requestUpdateMoney.put("cardDebitId",walletFlujo.getCardDebitAssociate());
+          requestUpdateMoney.put("cardDebitId", walletFlujo.getCardDebitAssociate());
           requestUpdateMoney.put("mount", movementWallet.getMount().toString());
           requestUpdateMoney.put("type", "decrease");
           Gson gson = new Gson();
@@ -66,12 +68,12 @@ public class InsertDebitCard extends InsertWhenDebitCard{
     return Mono.just(wallet)
         .then(walletRepository.findByNumberPhone(movementWallet.getDestinationFor()))
         .flatMap(walletFlujo -> {
-          if(walletFlujo.getCardDebitAssociate() == null){
+          if (walletFlujo.getCardDebitAssociate() == null) {
             walletFlujo.setBalanceTotal(walletFlujo.getBalanceTotal().add(movementWallet.getMount()));
             return walletRepository.save(walletFlujo);
-          }else{
+          } else {
             Map<String, String> requestUpdateMoney = new HashMap<>();
-            requestUpdateMoney.put("cardDebitId",walletFlujo.getCardDebitAssociate());
+            requestUpdateMoney.put("cardDebitId", walletFlujo.getCardDebitAssociate());
             requestUpdateMoney.put("mount", movementWallet.getMount().toString());
             requestUpdateMoney.put("type", "increase");
             Gson gson = new Gson();

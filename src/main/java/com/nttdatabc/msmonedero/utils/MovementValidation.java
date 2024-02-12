@@ -1,18 +1,20 @@
 package com.nttdatabc.msmonedero.utils;
 
+import static com.nttdatabc.msmonedero.utils.Constantes.*;
+
 import com.nttdatabc.msmonedero.model.MovementWallet;
-import com.nttdatabc.msmonedero.model.Wallet;
-import com.nttdatabc.msmonedero.repository.MovementWalletRepository;
 import com.nttdatabc.msmonedero.repository.WalletRepository;
 import com.nttdatabc.msmonedero.utils.exceptions.errors.ErrorResponseException;
 import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 
-import static com.nttdatabc.msmonedero.utils.Constantes.*;
+/**
+ * Validaciones de movimientos.
+ */
 
 public class MovementValidation {
 
-  public static Mono<Void>validateCentralFacade(MovementWallet movementWallet, WalletRepository walletRepository){
+  public static Mono<Void> validateCentralFacade(MovementWallet movementWallet, WalletRepository walletRepository) {
     return validateMovementNoNulls(movementWallet)
         .then(validateMovementEmpty(movementWallet))
         .then(verifyValues(movementWallet))
@@ -28,6 +30,7 @@ public class MovementValidation {
             HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST)))
         .then();
   }
+
   public static Mono<Void> validateMovementEmpty(MovementWallet movementWallet) {
     return Mono.just(movementWallet)
         .filter(c -> !c.getWalletId().isEmpty())
@@ -37,6 +40,7 @@ public class MovementValidation {
             HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST)))
         .then();
   }
+
   public static Mono<Void> verifyValues(MovementWallet movementWallet) {
     return Mono.just(movementWallet)
         .filter(c -> c.getMount().doubleValue() > VALUE_MIN_ACCOUNT_BANK)
@@ -44,14 +48,15 @@ public class MovementValidation {
             HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST)))
         .then();
   }
-  public static Mono<Void>verifyNumberDestination(MovementWallet movementWallet, WalletRepository walletRepository){
+
+  public static Mono<Void> verifyNumberDestination(MovementWallet movementWallet, WalletRepository walletRepository) {
     return walletRepository.findByNumberPhone(movementWallet.getDestinationFor())
         .hasElement()
         .flatMap(aBoolean -> {
-          if(aBoolean){
+          if (aBoolean) {
             return Mono.empty();
-          }else{
-            return Mono.error(new ErrorResponseException(EX_ERROR_NOT_FOUND_DESTINATION, HttpStatus.NOT_FOUND.value(),HttpStatus.NOT_FOUND ));
+          } else {
+            return Mono.error(new ErrorResponseException(EX_ERROR_NOT_FOUND_DESTINATION, HttpStatus.NOT_FOUND.value(), HttpStatus.NOT_FOUND));
           }
         });
   }

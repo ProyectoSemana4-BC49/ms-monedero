@@ -1,23 +1,16 @@
 package com.nttdatabc.msmonedero.model;
 
-import java.net.URI;
-import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import java.math.BigDecimal;
-import org.openapitools.jackson.nullable.JsonNullable;
-import java.time.OffsetDateTime;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.math.BigDecimal;
+import java.util.Objects;
+import javax.annotation.Generated;
+import javax.validation.Valid;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-
-import java.util.*;
-import javax.annotation.Generated;
-
 /**
- * MovementWallet
+ * MovementWallet.
  */
 @Document(value = "movementWallet")
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-02-11T11:09:15.941202200-05:00[America/Lima]")
@@ -39,8 +32,9 @@ public class MovementWallet {
   }
 
   /**
-   * Get id
-   * @return id
+   * Get id.
+   *
+   * @return id.
    */
 
   @Schema(name = "id", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -59,8 +53,9 @@ public class MovementWallet {
   }
 
   /**
-   * Get walletId
-   * @return walletId
+   * Get walletId.
+   *
+   * @return walletId.
    */
 
   @Schema(name = "walletId", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -74,15 +69,15 @@ public class MovementWallet {
   }
 
 
-
   public MovementWallet destinationFor(String destinationFor) {
     this.destinationFor = destinationFor;
     return this;
   }
 
   /**
-   * Get destinationFor
-   * @return destinationFor
+   * Get destinationFor.
+   *
+   * @return destinationFor.
    */
 
   @Schema(name = "destinationFor", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -100,9 +95,10 @@ public class MovementWallet {
     return this;
   }
 
-  /**
-   * Get dateMovement
-   * @return dateMovement
+  /**.
+   * Get dateMovement.
+   *
+   * @return dateMovement.
    */
 
   @Schema(name = "dateMovement", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -121,8 +117,9 @@ public class MovementWallet {
   }
 
   /**
-   * Get mount
-   * @return mount
+   * Get mount.
+   *
+   * @return mount.
    */
   @Valid
   @Schema(name = "mount", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
@@ -144,11 +141,11 @@ public class MovementWallet {
       return false;
     }
     MovementWallet movementWallet = (MovementWallet) o;
-    return Objects.equals(this.id, movementWallet.id) &&
-        Objects.equals(this.walletId, movementWallet.walletId) &&
-        Objects.equals(this.destinationFor, movementWallet.destinationFor) &&
-        Objects.equals(this.dateMovement, movementWallet.dateMovement) &&
-        Objects.equals(this.mount, movementWallet.mount);
+    return Objects.equals(this.id, movementWallet.id)
+        && Objects.equals(this.walletId, movementWallet.walletId)
+        && Objects.equals(this.destinationFor, movementWallet.destinationFor)
+        && Objects.equals(this.dateMovement, movementWallet.dateMovement)
+        && Objects.equals(this.mount, movementWallet.mount);
   }
 
   @Override

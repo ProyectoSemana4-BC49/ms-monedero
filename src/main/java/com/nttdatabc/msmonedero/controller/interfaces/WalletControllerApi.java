@@ -4,12 +4,14 @@ import com.nttdatabc.msmonedero.model.Wallet;
 import com.nttdatabc.msmonedero.utils.ApiUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import javax.annotation.Generated;
+import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +21,6 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.validation.Valid;
-import javax.annotation.Generated;
 
 @Generated(value = "org.openapitools.codegen.languages.SpringCodegen", date = "2024-02-11T11:09:15.941202200-05:00[America/Lima]")
 @Validated
@@ -30,14 +30,14 @@ public interface WalletControllerApi {
   /**
    * POST /wallet : Agregar Wallet
    *
-   * @param wallet  (optional)
+   * @param wallet (optional)
    * @return Cuenta bancaria creada exitosamente (status code 201)
-   *         or Error en Request (status code 400)
+   * or Error en Request (status code 400)
    */
   @Operation(
       operationId = "createWallet",
       summary = "Agregar Wallet",
-      tags = { "Wallet" },
+      tags = {"Wallet"},
       responses = {
           @ApiResponse(responseCode = "201", description = "Cuenta bancaria creada exitosamente"),
           @ApiResponse(responseCode = "400", description = "Error en Request")
@@ -46,7 +46,7 @@ public interface WalletControllerApi {
   @RequestMapping(
       method = RequestMethod.POST,
       value = "/wallet",
-      consumes = { "application/json" }
+      consumes = {"application/json"}
   )
   default ResponseEntity<Mono<Void>> createWallet(
       @Parameter(name = "Wallet", description = "") @Valid @RequestBody(required = false) Wallet wallet,
@@ -64,13 +64,13 @@ public interface WalletControllerApi {
    *
    * @param walletId ID del wallet (required)
    * @return Cuenta bancaria eliminada exitosamente (status code 200)
-   *         or Error en request (status code 400)
-   *         or Recurso no encontrado (status code 404)
+   * or Error en request (status code 400)
+   * or Recurso no encontrado (status code 404)
    */
   @Operation(
       operationId = "deleteWallet",
       summary = "Eliminar Wallet",
-      tags = { "Wallet" },
+      tags = {"Wallet"},
       responses = {
           @ApiResponse(responseCode = "200", description = "Cuenta bancaria eliminada exitosamente"),
           @ApiResponse(responseCode = "400", description = "Error en request"),
@@ -100,7 +100,7 @@ public interface WalletControllerApi {
   @Operation(
       operationId = "getAllWallets",
       summary = "Obtener todos los wallets",
-      tags = { "Wallet" },
+      tags = {"Wallet"},
       responses = {
           @ApiResponse(responseCode = "200", description = "Lista de wallets obtenida correctamente", content = {
               @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Wallet.class)))
@@ -110,7 +110,7 @@ public interface WalletControllerApi {
   @RequestMapping(
       method = RequestMethod.GET,
       value = "/wallet",
-      produces = { "application/json" }
+      produces = {"application/json"}
   )
   default ResponseEntity<Flux<Wallet>> getAllWallets(
       @Parameter(hidden = true) final ServerWebExchange exchange
@@ -134,13 +134,13 @@ public interface WalletControllerApi {
    *
    * @param walletId ID del wallet (required)
    * @return Detalle de Wallet obtenido exitosamente (status code 200)
-   *         or Error en request (status code 400)
-   *         or Recurso no encontrado (status code 404)
+   * or Error en request (status code 400)
+   * or Recurso no encontrado (status code 404)
    */
   @Operation(
       operationId = "getWalletById",
       summary = "Obtener detalle de Wallet",
-      tags = { "Wallet" },
+      tags = {"Wallet"},
       responses = {
           @ApiResponse(responseCode = "200", description = "Detalle de Wallet obtenido exitosamente", content = {
               @Content(mediaType = "application/json", schema = @Schema(implementation = Wallet.class))
@@ -152,7 +152,7 @@ public interface WalletControllerApi {
   @RequestMapping(
       method = RequestMethod.GET,
       value = "/wallet/{wallet_id}",
-      produces = { "application/json" }
+      produces = {"application/json"}
   )
   default ResponseEntity<Mono<Wallet>> getWalletById(
       @Parameter(name = "wallet_id", description = "ID del wallet", required = true, in = ParameterIn.PATH) @PathVariable("wallet_id") String walletId,
